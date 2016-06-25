@@ -24,14 +24,14 @@ function createActivityAndStringifyContent({
 
 function updateActivityAndStringifyContent(activityId, activity, trx = null) {
   activity.content = activity.content && JSON.stringify(activity.content);
-  return db.update(snakizeKeys(activity))
+  return db('activities').update(snakizeKeys(activity))
     .where('id', activityId)
     .transacting(trx);
 }
 
 function getActivityAndJSONContent(activityId) {
   return db.select()
-    .from('activity')
+    .from('activities')
     .where('id', activityId)
     .then(camelizeKeys)
     .then((rows) => rows.map((row) => {

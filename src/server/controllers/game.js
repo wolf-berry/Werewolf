@@ -6,7 +6,7 @@ function isDayCome(req) {
   const gameId = req.user.game.id;
   return db.select()
     .from('activities')
-    .where('gameId', gameId)
+    .where('game_id', gameId)
     .whereIn('type', [2, 3, 4, 5])
     .then((rows) => rows.length === 4
       && socket.emit(
