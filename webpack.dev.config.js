@@ -66,6 +66,9 @@ module.exports = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin()
-  ]
+  ],
+  externals: {
+    'agora-rtc': 'AgoraRTC',
+  },
 }
 
