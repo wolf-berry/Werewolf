@@ -7,12 +7,16 @@ import bodyParser from 'body-parser';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
+import passport from 'passport';
+import session from 'express-session';
+import SessionStore from 'express-mysql-session';
 
 import log from './log';
 import router from './router';
 import config from '../../webpack.dev.config';
 import configs from './configs';
 import socket from './socket';
+import './passport';
 
 const app = express();
 
@@ -31,6 +35,22 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(session({
+  secret: 'wolf',
+  resave: true,
+  saveUninitialized: true,
+  rolling: true,
+  cookie: { maxAge: 2 * 24 * 60 * 60 * 1000 },
+  store: new SessionStore({
+    host: configs.mysql.host,
+    user: configs.mysql.user,
+    password: configs.mysql.password,
+    database: configs.mysql.sessionDb,
+  }),
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 const compiler = webpack(config);
 

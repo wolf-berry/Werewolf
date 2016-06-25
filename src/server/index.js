@@ -8,6 +8,8 @@ import bodyParser from 'body-parser';
 import log from './log';
 import router from './router';
 import configs from './configs';
+import session from 'express-session';
+import SessionStore from 'express-mysql-session';
 
 const app = express();
 
@@ -22,6 +24,22 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(session({
+  secret: 'wolf',
+  resave: true,
+  saveUninitialized: true,
+  rolling: true,
+  cookie: { maxAge: 2 * 24 * 60 * 60 * 1000 },
+  store: new SessionStore({
+    host: configs.mysql.host,
+    user: configs.mysql.user,
+    password: configs.mysql.password,
+    database: configs.mysql.sessionDb,
+  }),
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', router);
 

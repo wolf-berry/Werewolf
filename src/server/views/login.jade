@@ -9,7 +9,7 @@ block content
     .auth__center__title #{title}
       if message
         .auth__center__error-message= message
-    form(method='post' onsubmit='return validateForm()')
+    form(method='post')
       .auth__center__form__input
         div
           input#email(name='email' type='email' placeholder='邮箱地址' data-validate='required email' value='#{email || ""}')

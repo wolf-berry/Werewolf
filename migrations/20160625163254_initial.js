@@ -3,7 +3,7 @@ exports.up = function(knex) {
   return knex.schema
   .createTable('users', (table) => {
     table.integer('id').primary().unsigned().notNullable();
-    table.string('name').comment('user name');
+    table.string('username').comment('user name');
     table.string('hashed_password').comment('hashed password');
     table.string('salt').comment('random salt');
     table.integer('score').comment('total score');
