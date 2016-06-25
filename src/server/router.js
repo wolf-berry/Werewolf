@@ -1,7 +1,7 @@
 import express from 'express';
 
 import game from './controllers/game';
-import session from '/controllers/session';
+import session from './controllers/session';
 
 const router = express.Router();
 
