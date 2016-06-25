@@ -2,3 +2,15 @@
   background-image: url(../images/bg.jpg);
   background-size: cover;
 }
+
+#wrapper {
+  padding: 0;
+}
+
+canvas {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
