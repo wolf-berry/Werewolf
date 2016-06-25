@@ -1,0 +1,18 @@
+{
+  "apps": [{
+    "name": "werewolf",
+    "script": "~/werewolf/index.js",
+    "error_file": "/root/logs/werewolf.log",
+    "out_file": "/root/logs/werewolf.log",
+    "merge_logs": true,
+    "env": {
+      "NODE_ENV": "production",
+      "PORT": 8000,
+      "PRODUCTION_SQL_HOST_NAME": "localhost",
+      "PRODUCTION_SQL_DB": "wolf",
+      "PRODUCTION_SESSION_DB": "wolf_session",
+      "PRODUCTION_SQL_USER_NAME": "root",
+      "PRODUCTION_SQL_PW": ""
+    }
+  }]
+}
