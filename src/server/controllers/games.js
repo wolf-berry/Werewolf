@@ -5,6 +5,36 @@ import { camelizeKeys, snakizeKeys } from '../util';
 import socket from '../socket';
 import gameController from './game';
 
+function getDeadUserIds(gameId) {
+  return db.select()
+    .from('game_user')
+    .where({
+      game_id: gameId,
+      result: 0,
+    })
+    .then((rows) => rows.map((row) => row.user_id));
+}
+
+function isEnd(gameId) {
+  return db.select()
+    .from('game_user')
+    .where('game_id', gameId)
+    .then((rows) => {
+      let wolfDeadCount = 0;
+      let personDeadCount = 0;
+      rows.forEach((row) => {
+        if (row.result === 0) {
+          if (row.role === 2) {
+            wolfDeadCount++;
+          } else {
+            personDeadCount++;
+          }
+        }
+      });
+      return (wolfDeadCount === 2) || (personDeadCount === 3);
+    });
+}
+
 function addUserToGameHelper(gameId, userId) {
   return db
     .insert(snakizeKeys({
@@ -94,4 +124,6 @@ export default {
   viewGame,
   viewGames,
   updateUserFromGameHelper,
+  isEnd,
+  getDeadUserIds,
 };

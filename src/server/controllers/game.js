@@ -2,6 +2,8 @@ import activity from './activity';
 import socket from '../socket';
 import db from '../db';
 
+import gamesController from './games';
+
 function getUserGameHelper(userId) {
   return db.select(
     'g.id',
@@ -60,14 +62,27 @@ function isDayCome(req) {
     .from('activities')
     .where('game_id', gameId)
     .whereIn('type', [2, 3, 4, 5])
-    .then((rows) => rows.length === 4
-      && socket.emit(
-        'game',
-        {
-          type: 5,
-        }
-      )
-    );
+    .then((rows) => {
+      if (rows.length !== 4) {
+        return false;
+      }
+      let isEnd;
+      return gamesController.isEnd(gameId)
+        .then((_isEnd) => {
+          isEnd = _isEnd;
+          return gamesController.getDeadUserIds(gameId);
+        })
+        .then((_rows) => {
+          socket.emit(
+            'game',
+            {
+              type: 5,
+              isEnd,
+              userIds: _rows,
+            }
+          );
+        });
+    });
 }
 
 function vote(req, res) {
@@ -89,7 +104,20 @@ function vote(req, res) {
     .then(() => {
       // wolf vote for killing
       if (type === 1) {
-        socket.emit();
+        socket.emit(
+          'game',
+          {
+            type: 3,
+            voteUserId: req.user.id,
+            userId,
+          },
+          req.game.users.filter((user) => (user.id !== req.user.id) && (user.role === 2))
+        );
+        if (votedLength === 2) {
+          /*socket.emit(
+            'game'
+          );*/
+        }
       }
     });
 }
