@@ -2,7 +2,6 @@ import Vue from 'vue';
 import Router from 'vue-router';
 
 import App from './App';
-import Home from './features/home/Home';
 import GameHall from './features/game-hall/GameHall';
 import GameRoom from './features/game-room/GameRoom';
 
@@ -12,11 +11,6 @@ Vue.use(Router);
 const router = new Router();
 
 router.map({
-
-  '/home': {
-    name: 'home',
-    component: Home,
-  },
 
   '/game-hall': {
     name: 'game-hall',
@@ -31,7 +25,7 @@ router.map({
 });
 
 router.redirect({
-  '/': '/home',
+  '/': '/game-hall',
 });
 
 router.beforeEach(() => {
