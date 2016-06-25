@@ -45,12 +45,13 @@ export default {
 </script>
 
 <style lang="stylus">
-.game-rom
+.game-room
   &__unfocused-user-windows
-    position fixed
+    position absolute
     left 0
     right 0
     bottom 0
     height 150px
-    border 1px solid red
+    text-align center
+    border 1px solid white
 </style>

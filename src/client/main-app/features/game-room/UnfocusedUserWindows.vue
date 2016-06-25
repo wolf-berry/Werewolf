@@ -1,8 +1,13 @@
 <template>
 <div>
-  <div class="unfocused-user-windows" v-for="user in users" @click="setFocusedUserId(user.id)">
-    user {{user.id}}
+  <div
+    :id="user.id"
+    class="unfocused-user-windows__item"
+    :class="{ 'focused': user.id === focusedUserId, 'unfocused': user.id !== focusedUserId }"
+    v-for="user in users"
+    @click="setFocusedUserId(user.id)">
   </div>
+  <div class="test"></div>
 </div>
 </template>
 
@@ -12,7 +17,7 @@ import {
 } from '../../vuex/actions';
 
 export default {
-  name: 'UnfocusedStreamWindows',
+  name: 'UnfocusedUserWindows',
 
   vuex: {
     actions: {
@@ -20,15 +25,34 @@ export default {
     },
     getters: {
       users: (state) => state.users,
+      usersCount: (state) => state.users.length,
       focusedUserId: (state) => state.focusedUserId,
     },
+  },
+
+  watch: {
+    usersCount: (newCount, oldCount) => {
+      console.error('boring WTF', newCount, oldCount, this.users);
+    },
+  },
+
+  ready() {
+    console.error('boring');
   },
 };
 </script>
 
 <style lang="stylus">
 .unfocused-user-windows
-  width 100px
-  height 100px
-  border 1px solid grey
+  &__item
+    display inline-block
+    height 90px
+    width 120px
+    margin 0 20px
+    vertical-align top
+    border 1px solid white
+    border-radius 2px
+    transition all 0.2s
+    &:hover
+      box-shadow 0px 0px 15px 2px rgba(255,255,255,1)
 </style>

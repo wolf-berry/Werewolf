@@ -11,7 +11,7 @@ Vue.nonreactive = function nonreactive(value) {
 Vue.use(Vuex);
 
 // Get login user
-const currentUser = window.WEREWOLF ? window.WEREWOLF.data : { id: 1, email: 'demo@werewolf.com' };
+const currentUser = window.WEREWOLF ? window.WEREWOLF.data : { id: 0, email: 'demo@werewolf.com' };
 
 const initialState = {
   agoraClient: Vue.nonreactive(AgoraRTC.createRtcClient()),
@@ -56,6 +56,16 @@ const mutations = {
       }
     }
   },
+
+  SET_USER_DISPLAYING (state, userId) {
+    for (let i = 0; i < state.users.length; i++) {
+      if (state.users[i].id === userId) {
+        state.users[i].displaying = true;
+        return;
+      }
+    }
+  },
+
 };
 
 export default new Vuex.Store({

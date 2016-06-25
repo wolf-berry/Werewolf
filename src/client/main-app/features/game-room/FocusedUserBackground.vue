@@ -3,12 +3,17 @@
 </template>
 
 <script>
-
+import {
+  setUserDisplaying,
+} from '../../vuex/actions';
 
 export default {
   name: 'FocusedUserBackground',
 
   vuex: {
+    actions: {
+      setUserDisplaying,
+    },
     getters: {
       user: (state) => {
         for (let i = 0; i < state.users.length; i++) {
@@ -23,7 +28,10 @@ export default {
 
   watch: {
     user: (focusedUser) => {
-      focusedUser.stream.play('focused-user-background');
+      if (focusedUser.stream) {
+        focusedUser.stream.play('focused-user-background');
+        this.setUserDisplaying(focusedUser.id);
+      }
     },
   },
 

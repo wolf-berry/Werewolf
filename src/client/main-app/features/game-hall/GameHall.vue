@@ -56,7 +56,7 @@ export default {
     initAgoraClient() {
       this.agoraClient.init(this.key, () => {
         console.log('AgoraRTC client initialized');
-
+        this.subscribeStreamEvents();
       }, (err) => {
         console.error('Failed to initialize AgoraRTC client: ', err);
         if (err) {
@@ -77,44 +77,44 @@ export default {
       });
     },
 
-    // subscribeStreamEvents() {
-    //   this.agoraClient.on('stream-added', (evt) => {
-    //     const stream = evt.stream;
-    //     console.log('New stream added: ' + stream.getId());
-    //     console.log('Timestamp: ' + Date.now());
-    //     console.log('Subscribe ', stream);
-    //     this.agoraClient.subscribe(stream, (err) => {
-    //       console.log('Subscribe stream failed', err);
-    //     });
-    //   });
+    subscribeStreamEvents() {
+      this.agoraClient.on('stream-added', (evt) => {
+        const stream = evt.stream;
+        console.log('New stream added: ' + stream.getId());
+        console.log('Timestamp: ' + Date.now());
+        console.log('Subscribe ', stream);
+        this.agoraClient.subscribe(stream, (err) => {
+          console.log('Subscribe stream failed', err);
+        });
+      });
 
-    //   this.agoraClient.on('peer-leave', (evt) => {
-    //     console.log('Peer has left: ' + evt.uid);
-    //     console.log('Timestamp: ' + Date.now());
-    //     console.log(evt);
-    //     showStreamOnPeerLeave(evt.uid);
-    //     //updateRoomInfo();
-    //   });
+      this.agoraClient.on('peer-leave', (evt) => {
+        console.log('Peer has left: ' + evt.uid);
+        console.log('Timestamp: ' + Date.now());
+        console.log(evt);
+        // showStreamOnPeerLeave(evt.uid);
+        //updateRoomInfo();
+      });
 
-    //   this.agoraClient.on('stream-subscribed', (evt) => {
-    //     const stream = evt.stream;
-    //     console.log('Got stream-subscribed event');
-    //     console.log('Timestamp: ' + Date.now());
-    //     console.log('Subscribe remote stream successfully: ' + stream.getId());
-    //     console.log(evt);
-    //     showStreamOnPeerAdded(stream);
-    //     //updateRoomInfo();
-    //   });
+      this.agoraClient.on('stream-subscribed', (evt) => {
+        const stream = evt.stream;
+        console.log('Got stream-subscribed event');
+        console.log('Timestamp: ' + Date.now());
+        console.log('Subscribe remote stream successfully: ' + stream.getId());
+        console.log(evt);
+        this.showStreamOnPeerAdded(stream);
+        //updateRoomInfo();
+      });
 
-    //   this.agoraClient.on('stream-removed', (evt) => {
-    //     const stream = evt.stream;
-    //     console.log('Stream removed: ' + stream.getId());
-    //     console.log('Timestamp: ' + Date.now());
-    //     console.log(evt);
-    //     showStreamOnPeerLeave(stream.getId());
-    //     //updateRoomInfo();
-    //   });
-    // },
+      this.agoraClient.on('stream-removed', (evt) => {
+        const stream = evt.stream;
+        console.log('Stream removed: ' + stream.getId());
+        console.log('Timestamp: ' + Date.now());
+        console.log(evt);
+        // showStreamOnPeerLeave(stream.getId());
+        //updateRoomInfo();
+      });
+    },
 
     createGame() {
       this
@@ -200,77 +200,10 @@ export default {
       });
     },
 
-    // showStreamOnPeerAdded(stream) {
-    //   var size;
+    showStreamOnPeerAdded(stream) {
+      this.addOneUser({ id: stream.getId(), stream });
+    },
 
-    //   if (remoteStreamList.length === 0) {
-    //       clearAllStream();
-    //       size = calculateVideoSize(false);
-
-    //       displayStream('agora-local', localStream, 160, 120, 'local-partner-video');
-    //       displayStream("agora-remote", stream, size.width, size.height, '');
-
-    //       toggleFullscreenButton(true);
-    //       toggleExpensionButton(true);
-    //   } else if (remoteStreamList.length === 1) {
-    //       clearAllStream();
-    //       addNewRows("video-container-multiple");
-    //       size = calculateVideoSize(true);
-
-    //       displayStream("agora-remote", remoteStreamList[0].stream, size.width, size.height, "remote-partner-video-multiple col-sm-6", "video-row1");
-    //       displayStream("agora-remote", stream, size.width, size.height, "remote-partner-video-multiple col-sm-6", "video-row1");
-    //       displayStream("agora-local", localStream, size.width, size.height, 'remote-partner-video-multiple col-sm-6', "video-row2");
-    //       addPlaceholderDiv("video-row2", size.width, size.height);
-
-    //       toggleFullscreenButton(false);
-    //       toggleExpensionButton(false);
-    //   } else if (remoteStreamList.length === 2) {
-    //       clearAllStream();
-    //       addNewRows("video-container-multiple");
-    //       size = calculateVideoSize(true);
-
-    //       // row 1
-    //       displayStream("agora-remote", remoteStreamList[0].stream, size.width, size.height, "remote-partner-video-multiple col-sm-6", "video-row1");
-    //       displayStream("agora-remote", remoteStreamList[1].stream, size.width, size.height, "remote-partner-video-multiple col-sm-6", "video-row1");
-    //       // row 2
-    //       displayStream("agora-remote", stream, size.width, size.height, 'remote-partner-video-multiple col-sm-6', 'video-row2');
-    //       displayStream("agora-local", localStream, size.width, size.height, 'remote-partner-video-multiple col-sm-6', "video-row2");
-    //   } else if (remoteStreamList.length === 3) {
-    //       clearAllStream();
-    //       addNewRows("video-container-multiple");
-    //       size = calculateVideoSize(true);
-
-    //       // row 1
-    //       displayStream("agora-remote", remoteStreamList[0].stream, size.width, size.height, "remote-partner-video-multiple col-sm-6", "video-row1");
-    //       displayStream("agora-remote", remoteStreamList[1].stream, size.width, size.height, "remote-partner-video-multiple col-sm-6", "video-row1");
-    //       // row 2
-    //       displayStream("agora-remote", remoteStreamList[2].stream, size.width, size.height, "remote-partner-video-multiple col-sm-6", "video-row2");
-    //       displayStream("agora-remote", stream, size.width, size.height, 'remote-partner-video-multiple col-sm-6', 'video-row2');
-    //   } else if (remoteStreamList.length === 4) {
-    //       clearAllStream();
-    //       addNewRows("video-container-multiple");
-    //       size = calculateVideoSize(true);
-
-    //       // row 1
-    //       displayStream("agora-remote", remoteStreamList[0].stream, size.width, size.height, "remote-partner-video-multiple col-sm-6", "video-row1");
-    //       displayStream("agora-remote", remoteStreamList[1].stream, size.width, size.height, "remote-partner-video-multiple col-sm-6", "video-row1");
-    //       // row 2
-    //       displayStream("agora-remote", remoteStreamList[2].stream, size.width, size.height, "remote-partner-video-multiple col-sm-6", "video-row2");
-    //       displayStream("agora-remote", remoteStreamList[3].stream, size.width, size.height, "remote-partner-video-multiple col-sm-6", "video-row2");
-
-    //       // we only allow 4 vidwo streams to display at the same time
-    //       createAudioContainer();
-    //       stream.disableVideo();
-    //       displayStream("agora-remote", stream, 0, 0, "", "audio-container");
-    //   } else {
-    //       stream.disableVideo();
-    //       displayStream("agora-remote", stream, 0, 0, "", "audio-container");
-    //   }
-
-    //   addToRemoteStreamList(stream, true, true);
-    //   // workaround to remove bottom bar
-    //   $("div[id^='bar_']").remove();
-    // }
   },
 };
 </script>
