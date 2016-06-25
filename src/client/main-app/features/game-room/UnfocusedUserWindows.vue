@@ -25,19 +25,9 @@ export default {
     },
     getters: {
       users: (state) => state.users,
-      usersCount: (state) => state.users.length,
+      userLength: (state) => state.userLength,
       focusedUserId: (state) => state.focusedUserId,
     },
-  },
-
-  watch: {
-    usersCount: (newCount, oldCount) => {
-      console.error('boring WTF', newCount, oldCount, this.users);
-    },
-  },
-
-  ready() {
-    console.error('boring');
   },
 };
 </script>

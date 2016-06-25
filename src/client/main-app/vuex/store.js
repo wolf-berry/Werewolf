@@ -17,6 +17,7 @@ const initialState = {
   agoraClient: Vue.nonreactive(AgoraRTC.createRtcClient()),
   currentUserId: currentUser.id,
   users: [currentUser],
+  userLength: 1,
   focusedUserId: null,
 };
 
@@ -28,7 +29,7 @@ const mutations = {
   ADD_USER (state, user) {
     for (let i = 0; i < state.users.length; i++) {
       if (state.users[i].id === user.id) {
-        state.users[i] = user;
+        state.users.$set(i, user);
         return;
       }
     }
@@ -39,7 +40,7 @@ const mutations = {
     for (let i = 0; i < state.users.length; i++) {
       if (state.users[i].id === userId) {
         state.users[i].stream.close();
-        state.users[i].stream = null;
+        state.users.$set(i, { id: userId, stream: null, displaying: false });
         return;
       }
     }
@@ -51,7 +52,7 @@ const mutations = {
         if (state.users[i].stream) {
           state.users[i].stream.close();
         }
-        state.users[i].stream = stream;
+        state.users.$set(i, { id: stream.getId(), stream, displaying: false });
         return;
       }
     }
@@ -60,7 +61,7 @@ const mutations = {
   SET_USER_DISPLAYING (state, userId) {
     for (let i = 0; i < state.users.length; i++) {
       if (state.users[i].id === userId) {
-        state.users[i].displaying = true;
+        state.users.$set({ id: userId, displaying: true, stream: state.users[i].stream });
         return;
       }
     }

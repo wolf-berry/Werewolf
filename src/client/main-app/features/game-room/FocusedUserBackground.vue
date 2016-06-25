@@ -30,7 +30,7 @@ export default {
     user: (focusedUser) => {
       if (focusedUser.stream) {
         focusedUser.stream.play('focused-user-background');
-        this.setUserDisplaying(focusedUser.id);
+        // this.setUserDisplaying(focusedUser.id);
       }
     },
   },

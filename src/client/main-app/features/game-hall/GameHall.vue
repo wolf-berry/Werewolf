@@ -50,6 +50,7 @@ export default {
 
   ready() {
     this.initAgoraClient();
+    this.addOneUser({ id: 333 });
   },
 
   methods: {
