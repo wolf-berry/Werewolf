@@ -10,6 +10,7 @@ import router from './router';
 import configs from './configs';
 import session from 'express-session';
 import SessionStore from 'express-mysql-session';
+import passport from 'passport';
 
 const app = express();
 

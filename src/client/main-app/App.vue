@@ -1,11 +1,7 @@
 <template>
-  <div class="app full-height">
-    <div>{{errorMessage}}</div>
-    <a v-link="{ name: 'game-hall' }">Goto GameHall</a>
-    <a v-link="{ name: 'game-room' }">Goto GameRoom</a>
-    <a v-link="{ name: 'test' }">Test Agora SDK</a>
-    <router-view></router-view>
-  </div>
+<div class="app__container">
+  <router-view></router-view>
+</div>
 </template>
 
 <script>
@@ -27,4 +23,12 @@ export default {
 
 <style lang='stylus'>
 @import '../common/style'
+
+.app__container
+  position absolute
+  left 0
+  right 0
+  top 0
+  bottom 0
+  background-color black
 </style>

@@ -5,7 +5,8 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
   entry: {
-    'main-app': path.join(__dirname, 'src/client/main-app/index.js')
+    'main-app': path.join(__dirname, 'src/client/main-app/index.js'),
+    'login': path.join(__dirname, 'src/client/login/login.js'),
   },
   output: {
     path: path.join(__dirname, 'src/server/public/javascripts/'),
@@ -53,7 +54,15 @@ module.exports = {
           limit: 10000,
           name: '[name].[ext]?[hash:7]'
         }
-      }
+      },
+      {
+        test: /\.styl$/,
+        loader: ExtractTextPlugin.extract('css?sourceMap!stylus',
+          {
+            publicPath: '/stylesheets/',
+          }
+        ),
+      },
     ]
   },
   vue: {
@@ -78,5 +87,8 @@ module.exports = {
     }),
     // optimize module ids by occurence count
     new webpack.optimize.OccurenceOrderPlugin()
-  ]
+  ],
+  externals: {
+    'agora-rtc': 'AgoraRTC',
+  },
 }

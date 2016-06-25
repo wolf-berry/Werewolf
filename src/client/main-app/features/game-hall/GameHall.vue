@@ -1,7 +1,6 @@
 <template>
-<div>
-  <div>{{errorMessage}}</div>
-  <button @click="createGame">创建游戏</button>
+<div class="game-hall__container">
+  <button class="game-hall__create-btn" @click="createGame">创建游戏</button>
 </div>
 </template>
 
@@ -40,7 +39,7 @@ export default {
   data() {
     return {
       uid: 0,
-      resulution: '480p',
+      resolution: '120p',
       maxFrameRate: 15,
       key: '0d592690c25548cf8b79643d2b7e4bb3',
       channel: '123',
@@ -164,3 +163,23 @@ export default {
   },
 };
 </script>
+
+<style lang="stylus">
+.game-hall
+  &__container
+    position absolute
+    left 50%
+    top 50%
+    transform translate(-50%, -50%)
+    text-align center
+    background-color black
+  &__create-btn
+    height 50px
+    padding 10px 30px
+    font-size 18px
+    color white
+    border 1px solid white
+    border-radius 2px
+    background-color transparent
+    cursor pointer
+</style>
