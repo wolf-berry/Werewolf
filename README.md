@@ -11,3 +11,11 @@ online video-able werewolf game (creation for HACKATHON RENAISSANCE)
 
     npm install
     knex migrate:latest
+
+## run in locale env
+
+    npm run dev
+
+## generate hashed password and salt
+
+    ./node_modules/.bin/babel-node src/server/bin/gen.js yourpassword
