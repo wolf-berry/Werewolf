@@ -15,18 +15,18 @@ import log from './log';
 import router from './router';
 import config from '../../webpack.dev.config';
 import configs from './configs';
-import socket from './socket';
+// import socket from './socket';
 import './passport';
 
 const app = express();
 
-const http = require('http').Server(app);
+// const http = require('http').Server(app);
 
-http.listen(configs.port, () => {
-  log.info(`Server started. Listening on port ${http.address().port}`);
-});
+// http.listen(configs.port, () => {
+//   log.info(`Server started. Listening on port ${http.address().port}`);
+// });
 
-socket.initSocket(http);
+// socket.initSocket(http);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -86,5 +86,7 @@ app.use(function(err, req, res) {
     error: err,
   });
 });
+
+app.listen(configs.port);
 
 export default app;
