@@ -33,7 +33,6 @@ export default {
 
   methods: {
     initAgoraRTC() {
-      console.log('boring', this.key);
       this.client.init(this.key, () => {
         console.log('AgoraRTC client initialized');
         this.client.join(this.key, this.channel, null, (uid) => {

@@ -8,7 +8,7 @@
 <script>
 import AgoraRTC from 'agora-rtc';
 
-import { generateVideoProfile } from '../../libs/agora_utils';
+import agoraUtils from '../../libs/agora_utils';
 import {
   addOneUser,
   removeUserStream,
@@ -24,8 +24,15 @@ export default {
       removeUserStream,
       setUserStream,
     },
-    getter: {
-      currentUser: (state) => state.users[state.currentUserId],
+    getters: {
+      currentUser: (state) => {
+        for (let i = 0; i < state.users.length; i++) {
+          if (state.users[i].id === state.currentUserId) {
+            return state.users[i];
+          }
+        }
+        return null;
+      },
     },
   },
 
@@ -43,16 +50,13 @@ export default {
 
   ready() {
     this.client = AgoraRTC.createRtcClient();
-    this.init();
-  },
-
-  beforeDestroy() {
     if (this.currentUser.stream) {
       this.client.unpublish(this.currentUser.stream, (err) => {
         this.removeUserStream(this.currentUser.id);
         console.log('Unpublish failed with error: ', err);
       });
     }
+    this.init();
   },
 
   methods: {
@@ -100,32 +104,34 @@ export default {
       return new Promise((resolve, reject) => {
         this.client.join(
           this.key,
-          this.currentUser.id,
           roomId,
+          this.currentUser.id,
           (uid) => {
-            console.log('User ' + uid + ' join channel successfully');
+            console.log('用户 ' + uid + ' 成功创建了房间');
             console.log('Timestamp: ' + Date.now());
             resolve();
           },
-          () => {
-            reject('创建房间失败');
+          (err) => {
+            console.error(err);
+            reject('创建房间失败: ', err);
           });
       });
     },
 
-    createLocalStream(uid) {
-      this.setUserStream(uid, AgoraRTC.createStream({
-        streamID: uid,
+    createLocalStream() {
+      this.setUserStream(this.currentUser.id, AgoraRTC.createStream({
+        streamID: this.currentUser.id,
         audio: true,
         video: true,
         screen: false,
         local: true,
       }));
+      console.log('创建LocalStream');
       return Promise.resolve();
     },
 
     initLocalStream() {
-      const videoProfile = generateVideoProfile(this.resolution, this.maxFrameRate);
+      const videoProfile = agoraUtils.generateVideoProfile(this.resolution, this.maxFrameRate);
       this.currentUser.stream.setVideoProfile(videoProfile);
 
       return new Promise((resolve, reject) => {
@@ -147,9 +153,10 @@ export default {
 
     publishLocalStream() {
       return new Promise((resolve, reject) => {
-        this.client.publish(this.localStream, (err) => {
+        this.client.publish(this.currentUser.stream, () => {
           console.log('Timestamp: ' + Date.now());
-          reject('Publish local stream error: ' + err);
+          console.log('LocalStream已发布');
+          resolve();
         });
 
         this.client.on('stream-published', () => {
