@@ -22,6 +22,10 @@ const app = express();
 
 const http = require('http').Server(app);
 
+http.listen(config.port, () => {
+  log.info(`Server started. Listening on port ${http.address().port}`);
+});
+
 socket.initSocket(http);
 
 // view engine setup
@@ -82,7 +86,5 @@ app.use(function(err, req, res) {
     error: err,
   });
 });
-
-app.listen(configs.port);
 
 export default app;

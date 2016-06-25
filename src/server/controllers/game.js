@@ -89,7 +89,7 @@ function vote(req, res) {
   const gameActivityId = req.params.gameActivityId;
   const { userId, type } = req.body;
   const voteUserId = req.user.id;
-  let votedLength = 0;
+  let content;
   return activity.getActivityAndJSONContent(gameActivityId)
     .then((rows) => {
       if (!rows.length) {
@@ -97,8 +97,7 @@ function vote(req, res) {
         err.status = 403;
         throw err;
       }
-      const content = rows[0].content.push({ voteUserId, userId, voteTime: new Date() });
-      votedLength = content.length;
+      content = rows[0].content.push({ voteUserId, userId, voteTime: new Date() });
       return activity.updateActivityAndStringifyContent(gameActivityId, { content });
     })
     .then(() => {
@@ -113,12 +112,26 @@ function vote(req, res) {
           },
           req.game.users.filter((user) => (user.id !== req.user.id) && (user.role === 2))
         );
-        if (votedLength === 2) {
-          /*socket.emit(
-            'game'
-          );*/
+        if (content.length === 2) {
+          socket.emit(
+            'game',
+            {
+              type: 4,
+              userId,
+            },
+            req.games.users.map((user) => user.id)
+          );
         }
+      } else if (type === 2 && content.length >= 5) {
+        socket.emit(
+          'game',
+          {
+            type: 8,
+            voted: content,
+          }
+        );
       }
+      res.status(200).send();
     });
 }
 
