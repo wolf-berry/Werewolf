@@ -13,8 +13,8 @@ export default {
   },
 
   ready() {
-    const socket = io();
-    console.log(socket);
+    // const socket = io();
+    // console.log(socket);
     console.log('ready');
   },
 };

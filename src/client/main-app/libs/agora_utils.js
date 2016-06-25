@@ -37,8 +37,6 @@ function generateVideoProfile(resolution, frameRate) {
     break;
   }
 
-  console.log('boring', result);
-
   return result;
 }
 

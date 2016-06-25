@@ -96,7 +96,6 @@ export default {
 
     createGameRoom(roomId) {
       return new Promise((resolve, reject) => {
-        console.log('boring', this.agoraClient);
         this.agoraClient.join(
           this.key,
           roomId,

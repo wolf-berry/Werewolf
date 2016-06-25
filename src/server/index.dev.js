@@ -22,7 +22,7 @@ const app = express();
 
 const http = require('http').Server(app);
 
-http.listen(config.port, () => {
+http.listen(configs.port, () => {
   log.info(`Server started. Listening on port ${http.address().port}`);
 });
 
