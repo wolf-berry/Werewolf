@@ -7,7 +7,7 @@ function createActivity({
   startTime = new Date(),
   endTime = new Date(),
   },
-  trx = null,
+  trx = null
 ) {
   return db.insert({
     gameId,

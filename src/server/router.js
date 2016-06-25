@@ -15,6 +15,6 @@ router.get('/login', (req, res) => res.render('login'));
 router.post('/login', session.login);
 router.post('/logout', session.logout);
 
-router.put('/api/game/vote/:gameId', game);
+//router.put('/api/game/vote/:gameId', game);
 
 export default router;
