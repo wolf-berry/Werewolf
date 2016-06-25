@@ -1,45 +1,27 @@
 <template>
 <div>
-  <focused-stream-window :stream="focusedStream"></focused-stream-window>
-  <unfocused-stream-windows class="game-room__unfocused-stream-windows" :streams="unfocusedStreams"></unfocused-stream-windows>
+  <focused-user-background></focused-user-background>
+  <unfocused-user-windows class="game-room__unfocused-user-windows"></unfocused-user-windows>
 </div>
 </template>
 
 <script>
-import FocusedStreamWindow from './FocusedStreamWindow';
-import UnfocusedStreamWindows from './UnfocusedStreamWindows';
-
-import {
-  kill,
-} from '../../vuex/actions';
+import FocusedUserBackground from './FocusedUserBackground';
+import UnfocusedUserWindows from './UnfocusedUserWindows';
 
 export default {
   name: 'GameRoom',
 
   components: {
-    FocusedStreamWindow,
-    UnfocusedStreamWindows,
-  },
-
-  vuex: {
-    actions: {
-      kill,
-    },
-    getters: {
-      currentUser: (state) => state.user,
-    },
-  },
-
-  data () {
-    return {
-    };
+    FocusedUserBackground,
+    UnfocusedUserWindows,
   },
 };
 </script>
 
 <style lang="stylus">
 .game-rom
-  &__unfocused-stream-windows
+  &__unfocused-user-windows
     position fixed
     left 0
     right 0
