@@ -65,7 +65,11 @@ module.exports = {
     formatter: require('eslint-friendly-formatter')
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.DefinePlugin({
+      __DEVTOOLS__: false,  // <-------- ENABLE/DISABLE redux-devtools HERE
+      __PORT__: 4567,
+    }),
   ],
   externals: {
     'agora-rtc': 'AgoraRTC',

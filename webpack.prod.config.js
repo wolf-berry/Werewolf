@@ -86,7 +86,10 @@ module.exports = {
       compress: { warnings: false }
     }),
     // optimize module ids by occurence count
-    new webpack.optimize.OccurenceOrderPlugin()
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.DefinePlugin({
+      __PORT__: 8000,
+    }),
   ],
   externals: {
     'agora-rtc': 'AgoraRTC',
