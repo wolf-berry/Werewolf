@@ -12,8 +12,13 @@ import log from './log';
 import router from './router';
 import config from '../../webpack.dev.config';
 import configs from './configs';
+import socket from './socket';
 
 const app = express();
+
+const http = require('http').Server(app);
+
+socket.initSocket(http);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
