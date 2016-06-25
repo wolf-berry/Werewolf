@@ -1,6 +1,22 @@
 import activity from './activity';
 import socket from '../socket';
+import db from '../db';
 
+function isDayCome(req) {
+  const gameId = req.user.game.id;
+  return db.select()
+    .from('activities')
+    .where('gameId', gameId)
+    .whereIn('type', [2, 3, 4, 5])
+    .then((rows) => rows.length === 4
+      && socket.emit(
+        'game',
+        {
+          type: 5,
+        }
+      )
+    );
+}
 
 function vote(req, res) {
   const gameActivityId = req.params.gameActivityId;
@@ -27,21 +43,51 @@ function vote(req, res) {
 }
 
 function check(req, res) {
-  const gameId = req.params.gameId;
-  
+  const userId = req.body.userId;
+  const gameId = req.user.game.id;
+  return activity.createActivityAndStringifyContent({
+    gameId,
+    type: 5,
+    content: {
+      userId,
+    },
+    startAt: new Date(),
+  })
+  //.then(())
+  .then(() => isDayCome(req));
+  //.then((boolean) => );
 }
 
 function save(req, res) {
-  const gameId = req.params.gameId;
-  
+  const userId = req.body.userId;
+  const gameId = req.user.game.id;
+  return activity.createActivityAndStringifyContent({
+    gameId,
+    type: 3,
+    content: {
+      userId,
+    },
+    startAt: new Date(),
+  });
 }
 
 function kill(req, res) {
-  const gameId = req.params.gameId;
+  const userId = req.body.userId;
+  const gameId = req.user.game.id;
+  return activity.createActivityAndStringifyContent({
+    gameId,
+    type: 4,
+    content: {
+      userId,
+    },
+    startAt: new Date(),
+  })
+  .then(() => isDayCome(gameId))
+  .then((boolean) => boolean);
 }
 
 function speak(req, res) {
-  const gameId = req.params.gameId;
+  const gameId = req.user.game.id;
   const userId = req.user.id;
   return activity.createActivityAndStringifyContent(
     {
