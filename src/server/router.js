@@ -11,6 +11,6 @@ router.get('/', (req, res) => {
 
 router.get('/login', (req, res) => res.render('login'));
 
-//router.put('/api/game/vote/:gameId', );
+router.put('/api/game/vote/:gameId', game);
 
 export default router;
