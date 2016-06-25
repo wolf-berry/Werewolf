@@ -10,7 +10,8 @@ online video-able werewolf game (creation for HACKATHON RENAISSANCE)
     mysql> create database wolf_session;
 
     npm install
-    knex migrate:latest
+    # insert table fields
+    ./node_modules/.bin/babel-node src/server/bin/createTable.js
 
 ## run in locale env
 
