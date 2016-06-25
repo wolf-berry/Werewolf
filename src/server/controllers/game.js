@@ -2,6 +2,58 @@ import activity from './activity';
 import socket from '../socket';
 import db from '../db';
 
+function getUserGameHelper(userId) {
+  return db.select(
+    'g.id',
+    'gu.user_id as userId',
+    'u.username as userName',
+    'gu.index',
+    'gu.role',
+    'gu.alive',
+    'gu.result'
+  )
+  .from('game_user as gu')
+  .leftJoin('games as g', 'gu.game_id', 'g.id')
+  .leftJoin('users as u', 'gu.user_id', 'u.id')
+  .where('gu.user_id', userId)
+  .where('g.status', 1)
+  .then((rows) => {
+    const game = {
+      id: null,
+      users: rows.map((row) => ({
+        id: row.userId,
+        index: row.index,
+        role: row.role,
+        alive: row.alive,
+        result: row.result,
+      })),
+    };
+    if (rows.length) {
+      game.id = rows[0].gameId;
+    }
+    return game;
+  });
+}
+
+function formatGame(game) {
+  
+  const game = {
+        id: null,
+        alive: {
+          1: [],
+          2: [],
+          3: [],
+          4: [],
+        },
+        dead: {
+          1: [],
+          2: [],
+          3: [],
+          4: [],
+        },
+      };
+}
+
 function isDayCome(req) {
   const gameId = req.user.game.id;
   return db.select()
@@ -107,3 +159,7 @@ function speakDone(req, res) {
   return activity.updateActivityAndStringifyContent(gameActivityId, { endAt: new Date() });
     //.then(() => );
 }
+
+export default {
+  getUserGameHelper,
+};

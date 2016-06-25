@@ -33,7 +33,7 @@ function getActivityAndJSONContent(activityId) {
   return db.select()
     .from('activities')
     .where('id', activityId)
-    .then(camelizeKeys)
+    .then((rows) => rows.map(camelizeKeys))
     .then((rows) => rows.map((row) => {
       row.content = JSON.parse(row.content);
       return row;

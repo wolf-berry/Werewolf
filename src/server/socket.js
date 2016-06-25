@@ -1,4 +1,6 @@
 /* eslint-disable no-invalid-this */
+import db from './db';
+
 let ioInstance;
 const userIdIndexSockets = {};
 
@@ -15,6 +17,9 @@ function initSocket(http) {
     });
     socket.on('disconnect', function() {
       delete userIdIndexSockets[this.userId];
+      db('game_user').update('result', 0)
+      .where('user_id', this.userId)
+      .whereNotNull('result');
       console.log(`user ${this.userId} disconnected`);
     });
   });

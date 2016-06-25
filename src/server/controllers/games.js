@@ -1,8 +1,9 @@
 import Promise from 'bluebird';
 
 import db from '../db';
-import { snakizeKeys } from '../util';
+import { camelizeKeys, snakizeKeys } from '../util';
 import socket from '../socket';
+import gameController from './game';
 
 function addUserToGameHelper(gameId, userId) {
   return db
@@ -10,7 +11,16 @@ function addUserToGameHelper(gameId, userId) {
       gameId,
       userId,
     }))
-    .into('games');
+    .into('game_user');
+}
+
+function updateUserFromGameHelper(gameId, userId, updateData) {
+  return db('game_user')
+    .update(snakizeKeys(updateData))
+    .where({
+      game_id: gameId,
+      user_id: userId,
+    });
 }
 
 function createGame(req, res) {
@@ -26,38 +36,61 @@ function createGame(req, res) {
 function addUserToGame(req, res) {
   const gameId = req.params.gameId;
   const userId = req.user.id;
-  return addUserToGameHelper(gameId, userId);
-    //.then(() => )
+  return addUserToGameHelper(gameId, userId)
+    .then(() => gameController.getUserGameHelper(userId))
+    .then((game) => socket.emit(
+      'users',
+      {
+        type: 1,
+        user: {
+          id: userId,
+          name: req.user.username,
+        },
+      },
+      game.users.filter((user) => user.id !== userId)
+      .map((user) => user.id)
+    ))
+    .then((game) => res.status(200).json({
+      channelId: null,
+      game,
+    }));
+}
+
+function viewGame(req, res) {
+  const gameId = req.params.gameId;
+  return Promise.all([
+    db.select()
+    .from('activities')
+    .whereIn('game_id', gameId),
+    db.select()
+    .from('games')
+    .where('id', gameId),
+  ])
+  .spread((aRows, gRows) => res.status(200).json({
+    ...gRows[0],
+    activities: aRows.map(camelizeKeys),
+  }));
 }
 
 function viewGames(req, res) {
   const userId = req.user.id;
-  let promise;
-  const games = {};
-  if (req.params.gameId) {
-    promise = Promise.resolve([req.params.gameId]);
-  } else {
-    /*promise = db.select()
-      .from('game_user')
-      .where('user_id', userId)
-      .then((rows) => rows.map((row) => {
-        const gameId = row.game_id;
-        games[gameId].user
-        return row.game_id;
-      }));*/
-  }
-  return promise
-    .then((gameIds) => db
+  return db.select()
+    .from('game_user')
+    .where('user_id', userId)
+    .then((rows) => db
       .select()
-      .from('activities')
-      .whereIn('game_id', gameIds)
+      .from('games')
+      .whereIn('id', rows.map((row) => row.game_id))
     )
-    .then((rows) => {
-      rows.forEach((row) => {
-        const gameId = row.game_id;
-        if (games[gameId]) {
-          games[gameId].activities = [row];
-        }
-      });
-    });
+    .then((rows) => rows.map(camelizeKeys))
+    .then((rows) => res.status(200).json(rows));
 }
+
+export default {
+  addUserToGameHelper,
+  createGame,
+  addUserToGame,
+  viewGame,
+  viewGames,
+  updateUserFromGameHelper,
+};
