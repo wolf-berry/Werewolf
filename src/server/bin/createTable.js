@@ -1,6 +1,5 @@
-
 import db from '../db';
-
+import crypto from 'crypto';
 
 // if exist delete them and dump into new table schema
 db.schema
@@ -8,6 +7,14 @@ db.schema
   if (exists) {
     return db.schema.dropTable('activities');
   }
+})
+.then(() => {
+  return db.schema
+  .hasTable('game_user').then((exists) => {
+    if (exists) {
+      return db.schema.dropTable('game_user');
+    }
+  });
 })
 .then(() => {
   return db.schema
@@ -64,8 +71,18 @@ db.schema
     table.foreign('user_id').references('users.id').onDelete('SET NULL').onUpdate('CASCADE');
     table.integer('index').unsigned().comment('index of userin current game');
     table.integer('role').nullable().comment('role of user in current game');
-    table.integer('alive').nullbale().comment('whether alive in current game');
+    table.integer('alive').nullable().comment('whether alive in current game');
+    table.integer('result').nullable().comment('result of current game');
   });
+})
+.then(() => {
+  // add a default user
+  const username = 'a@a.com';
+  const salt = crypto.randomBytes(16).toString('base64');
+  const bufferSalt = new Buffer(salt, 'base64');
+  const hashedPassword = crypto.pbkdf2Sync('123', bufferSalt, 10000, 64).toString('base64');
+  return db('users')
+  .insert({ username, hashed_password: hashedPassword, salt });
 })
 .then(() => {
   console.log('导入数据完成啦♪(^∇^*)');
