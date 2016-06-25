@@ -64,6 +64,7 @@ db.schema
     table.foreign('user_id').references('users.id').onDelete('SET NULL').onUpdate('CASCADE');
     table.integer('index').unsigned().comment('index of userin current game');
     table.integer('role').nullable().comment('role of user in current game');
+    table.integer('alive').nullbale().comment('whether alive in current game');
   });
 })
 .then(() => {
