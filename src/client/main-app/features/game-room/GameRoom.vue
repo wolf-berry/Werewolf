@@ -9,12 +9,29 @@
 import FocusedUserBackground from './FocusedUserBackground';
 import UnfocusedUserWindows from './UnfocusedUserWindows';
 
+import {
+  setFocusedUserId,
+} from '../../vuex/actions';
+
 export default {
   name: 'GameRoom',
 
   components: {
     FocusedUserBackground,
     UnfocusedUserWindows,
+  },
+
+  vuex: {
+    actions: {
+      setFocusedUserId,
+    },
+    getters: {
+      currentUserId: (state) => state.currentUserId,
+    },
+  },
+
+  ready() {
+    this.setFocusedUserId(this.currentUserId);
   },
 };
 </script>

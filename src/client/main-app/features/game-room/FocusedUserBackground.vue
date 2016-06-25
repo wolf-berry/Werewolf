@@ -8,7 +8,20 @@ export default {
 
   vuex: {
     getters: {
-      user: (state) => state.users[state.focusedUserId],
+      user: (state) => {
+        for (let i = 0; i < state.users.length; i++) {
+          if (state.users[i].id === state.focusedUserId) {
+            return state.users[i];
+          }
+        }
+        return null;
+      },
+    },
+  },
+
+  watch: {
+    user: (val, oldVal) => {
+      val.stream.play('focused-user-background');
     },
   },
 };
