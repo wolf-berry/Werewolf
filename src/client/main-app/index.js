@@ -5,6 +5,8 @@ import App from './App';
 import GameHall from './features/game-hall/GameHall';
 import GameRoom from './features/game-room/GameRoom';
 
+import Test from './features/test/Test';
+
 Vue.config.debug = true;
 Vue.use(Router);
 
@@ -20,6 +22,11 @@ router.map({
   '/game-room': {
     name: 'game-room',
     component: GameRoom,
+  },
+
+  '/test': {
+    name: 'test',
+    component: Test,
   },
 
 });

@@ -1,14 +1,15 @@
 <template>
   <div>
-    GameHall
+    Test Agora SDK!
   </div>
 </template>
 
 <script>
 export default {
+  name: 'Test',
+
   data () {
     return {
-      msg: 'GameHall',
     };
   },
 };

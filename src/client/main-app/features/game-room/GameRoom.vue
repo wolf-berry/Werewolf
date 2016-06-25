@@ -1,6 +1,6 @@
 <template>
   <div>
-    hello {{currentUser.email}} !
+    GameRoom
   </div>
 </template>
 
