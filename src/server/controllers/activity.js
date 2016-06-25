@@ -5,8 +5,8 @@ function createActivityAndStringifyContent({
   gameId,
   type,
   content,
-  startAt = new Date(),
-  endAt = new Date(),
+  startAt,
+  endAt,
   },
   trx = null
 ) {
