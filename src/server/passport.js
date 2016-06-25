@@ -15,15 +15,35 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-  db.select().from('users').where({ id: id })
+  let user;
+  db.select()
+  .from('users')
+  .where('id', 2)
   .then((users) => {
     if (users.length === 0) {
       // no such user exists
       done(null, false);
-    } else {
-      // successfully find the logged-in user
-      done(null, util.camelizeKeys(users[0]));
     }
+    user = users[0];
+    return db.select('g.id')
+    .from('game_user as gu')
+    .leftJoin('games as g', 'gu.game_id', 'g.id')
+    .where('gu.user_id', user.id)
+    .where('g.status', 1);
+  })
+  .then((rows) => {
+    if (!rows.length) {
+      return [];
+    }
+    const gameId = rows[0].id;
+    return db.select()
+    .from('game_user')
+    .where('game_id', gameId);
+  })
+  .then((rows) => {
+    user.game = rows;
+    // successfully find the logged-in user
+    done(null, util.camelizeKeys(user));
   })
   .catch((err) => {
     log.error(err);
