@@ -35,7 +35,7 @@ function getUserGameHelper(userId) {
   });
 }
 
-function formatGame(game) {
+/*function formatGame(game) {
   
   const game = {
         id: null,
@@ -52,7 +52,7 @@ function formatGame(game) {
           4: [],
         },
       };
-}
+}*/
 
 function isDayCome(req) {
   const gameId = req.user.game.id;

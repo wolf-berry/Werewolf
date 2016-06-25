@@ -67,7 +67,8 @@ function viewGame(req, res) {
     .where('id', gameId),
   ])
   .spread((aRows, gRows) => res.status(200).json({
-    ...gRows[0],
+    id: gRows[0].id,
+    status: gRows[0].status,
     activities: aRows.map(camelizeKeys),
   }));
 }
