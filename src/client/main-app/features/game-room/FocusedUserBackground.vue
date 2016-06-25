@@ -3,6 +3,8 @@
 </template>
 
 <script>
+
+
 export default {
   name: 'FocusedUserBackground',
 
@@ -20,9 +22,18 @@ export default {
   },
 
   watch: {
-    user: (val, oldVal) => {
-      val.stream.play('focused-user-background');
+    user: (focusedUser) => {
+      focusedUser.stream.play('focused-user-background');
     },
+  },
+
+  ready() {
+    // if (this.user.stream) {
+    //   this.client.unpublish(this.user.stream, (err) => {
+    //     this.removeUserStream(this.user.id);
+    //     console.log('Unpublish failed with error: ', err);
+    //   });
+    // }
   },
 };
 </script>

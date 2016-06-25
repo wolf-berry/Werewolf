@@ -1,12 +1,20 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
+import AgoraRTC from 'agora-rtc';
 
+Vue.nonreactive = function nonreactive(value) {
+  const Observer = (new Vue()).$data.__ob__.constructor;
+  // Set dummy observer on value
+  value.__ob__ = new Observer({});
+  return value;
+};
 Vue.use(Vuex);
 
 // Get login user
 const currentUser = window.WEREWOLF ? window.WEREWOLF.data : { id: 1, email: 'demo@werewolf.com' };
 
 const initialState = {
+  agoraClient: Vue.nonreactive(AgoraRTC.createRtcClient()),
   currentUserId: currentUser.id,
   users: [currentUser],
   focusedUserId: null,

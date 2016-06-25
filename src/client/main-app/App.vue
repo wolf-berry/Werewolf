@@ -1,6 +1,6 @@
 <template>
   <div class="app full-height">
-    <h1>{{ message }}</h1>
+    <div>{{errorMessage}}</div>
     <a v-link="{ name: 'game-hall' }">Goto GameHall</a>
     <a v-link="{ name: 'game-room' }">Goto GameRoom</a>
     <a v-link="{ name: 'test' }">Test Agora SDK</a>
@@ -16,11 +16,12 @@ export default {
 
   store,
 
-  data () {
-    return {
-      message: 'WereWolf',
-    };
+  vuex: {
+    getters: {
+      agoraClient: (state) => state.agoraClient,
+    },
   },
+
 };
 </script>
 

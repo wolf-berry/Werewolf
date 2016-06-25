@@ -8,12 +8,12 @@
 <script>
 import AgoraRTC from 'agora-rtc';
 
-import agoraUtils from '../../libs/agora_utils';
 import {
   addOneUser,
   removeUserStream,
   setUserStream,
 } from '../../vuex/actions';
+import agoraUtils from '../../libs/agora_utils';
 
 export default {
   name: 'GameHall',
@@ -25,6 +25,7 @@ export default {
       setUserStream,
     },
     getters: {
+      agoraClient: (state) => state.agoraClient,
       currentUser: (state) => {
         for (let i = 0; i < state.users.length; i++) {
           if (state.users[i].id === state.currentUserId) {
@@ -49,19 +50,12 @@ export default {
   },
 
   ready() {
-    this.client = AgoraRTC.createRtcClient();
-    if (this.currentUser.stream) {
-      this.client.unpublish(this.currentUser.stream, (err) => {
-        this.removeUserStream(this.currentUser.id);
-        console.log('Unpublish failed with error: ', err);
-      });
-    }
-    this.init();
+    this.initAgoraClient();
   },
 
   methods: {
-    init() {
-      this.client.init(this.key, () => {
+    initAgoraClient() {
+      this.agoraClient.init(this.key, () => {
         console.log('AgoraRTC client initialized');
       }, (err) => {
         console.error('Failed to initialize AgoraRTC client: ', err);
@@ -96,13 +90,15 @@ export default {
         });
       })
       .catch((err) => {
+        console.error(err);
         this.errorMessage = err;
       });
     },
 
     createGameRoom(roomId) {
       return new Promise((resolve, reject) => {
-        this.client.join(
+        console.log('boring', this.agoraClient);
+        this.agoraClient.join(
           this.key,
           roomId,
           this.currentUser.id,
@@ -126,7 +122,7 @@ export default {
         screen: false,
         local: true,
       }));
-      console.log('创建LocalStream');
+      console.log('创建 LocalStream 成功');
       return Promise.resolve();
     },
 
@@ -153,19 +149,18 @@ export default {
 
     publishLocalStream() {
       return new Promise((resolve, reject) => {
-        this.client.publish(this.currentUser.stream, () => {
+        this.agoraClient.publish(this.currentUser.stream, () => {
           console.log('Timestamp: ' + Date.now());
           console.log('LocalStream已发布');
           resolve();
         });
 
-        this.client.on('stream-published', () => {
+        this.agoraClient.on('stream-published', () => {
           console.log('Local stream published');
           resolve();
         });
       });
     },
-
   },
 };
 </script>
