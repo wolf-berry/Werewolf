@@ -4,7 +4,8 @@ var webpack = require('webpack')
 
 module.exports = {
   entry: {
-    'main-app': path.join(__dirname, 'src/client/main-app/index.js')
+    'main-app': path.join(__dirname, 'src/client/main-app/index.js'),
+    'login': path.join(__dirname, 'src/client/login/login.js'),
   },
   output: {
     path: path.join(__dirname, 'src/server/public/javascripts/'),
@@ -40,6 +41,10 @@ module.exports = {
       {
         test: /\.vue$/,
         loader: 'vue'
+      },
+      {
+        test: /\.styl$/,
+        loader: 'style!css?sourceMap!stylus',
       },
       {
         test: /\.json$/,

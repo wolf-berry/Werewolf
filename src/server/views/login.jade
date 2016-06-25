@@ -1,0 +1,24 @@
+extends layout
+
+block append head
+  link(rel='stylesheet', href='/stylesheets/login.css', type='text/css')
+  title werewolf
+
+block content
+  .auth__center
+    .auth__center__title #{title}
+      if message
+        .auth__center__error-message= message
+    form(method='post' onsubmit='return validateForm()')
+      .auth__center__form__input
+        div
+          input#email(name='email' type='email' placeholder='邮箱地址' data-validate='required email' value='#{email || ""}')
+          span#email__icon.auth__center__form__input__icon
+          span#email__error.auth__center__form__input__error
+        div
+          input#password(name='password' type='password' placeholder='密码' data-validate='required' value='#{password || ""}')
+          span#password__icon.auth__center__form__input__icon
+          span#password__error.auth__center__form__input__error
+      button.auth__center__form__submit(type='submit') 登录
+
+  script(src='/javascripts/login.js')

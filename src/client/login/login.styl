@@ -1,0 +1,173 @@
+@import '../common/style.styl'
+
+banner-height = 80px
+
+@keyframes spin
+  100%
+    transform rotate(360deg)
+
+$auth__form__input
+  box-sizing border-box
+  width 300px
+  input
+    width 300px
+    height 40px
+    padding-left 1em
+    margin-top -1px
+    box-sizing border-box
+    border 1px solid color-light-gray-3
+    vertical-align middle
+    &.success
+      border-color color-blue-10
+    &.error
+      position relative
+      z-index 0
+      border-color color-failure-red-4
+    &:hover, &:focus
+      position relative
+      z-index 1
+      border-color color-positive-background
+    &:first-child
+      border-top-left-radius 2px
+      border-top-right-radius 2px
+    &:last-child
+      border-bottom-left-radius 2px
+      border-bottom-right-radius 2px
+
+$auth__center__link
+  display inline-block
+  color color-blue-4
+  text-decoration none
+  font-size 13px
+  cursor pointer
+
+html
+  overflow-y auto
+
+body
+  position relative
+  min-height 720px
+
+button
+  background transparent
+
+.auth
+  &__banner
+    height banner-height
+    border-bottom 1px solid color-light-gray-2
+    text-align center
+    line-height banner-height + 10px
+    color color-main-orange
+    img
+      height 25px
+      border none
+
+  &__copyright
+    position absolute
+    left 0
+    right 0
+    bottom 0
+    height 46px
+    padding-top 33px
+    width 90%
+    margin-left auto
+    margin-right auto
+    border-top 1px solid color-light-gray-2
+    text-align center
+    span
+      color color-light-gray-16
+      font-size 12px
+      line-height 12px
+
+  &__loading
+    position absolute
+    display inline-block
+    margin 0 4px
+    font-size 18px
+    animation spin 2s linear infinite
+
+  &__center
+    position absolute
+    top 220px
+    left 50%
+    transform translateX(-50%)
+    &__title
+      margin-bottom 30px
+      text-align center
+      color blur-black
+      font-size 20px
+      line-height 1.5
+      &__sub
+        text-align center
+        color color-secondary-text
+    &__error-message
+      color color-failure-red-1
+      font-size 13px
+      text-align center
+    &__form
+      &__input
+        @extends $auth__form__input
+        &__error
+          position absolute
+          margin-left 12px
+          font-size 12px
+          line-height 40px
+          color color-failure-red-4
+          white-space nowrap
+        &__icon
+          position absolute
+          z-index 2
+          margin-left -27px
+          font-size 16px
+          line-height 40px
+          pointer-events none
+          &.icon-input-success
+            color color-blue-10
+          &.icon-input-error
+            color color-failure-red-4
+        &__hint
+          margin-top 6px
+          margin-bottom 30px
+          font-size 12px
+      &__submit
+        display block
+        width 100%
+        height 40px
+        margin-top 56px
+        border-radius 40px
+        cursor pointer
+    &__link
+      @extends $auth__center__link
+      &--right
+        @extends $auth__center__link
+        display block
+        margin 20px auto
+        text-align right
+
+.signup__bottom
+  margin-top 42px
+  text-align center
+  font-size 13px
+
+.onboard
+  &__basic-info__form__input
+    @extends .auth__center__form__input
+    margin-bottom 30px
+  &__loading
+    display none
+
+.signup__activate
+  &__bottom
+    position absolute
+    bottom 150px
+    left 50%
+    width 340px
+    transform translateX(-50%)
+    font-size 12px
+    line-height 27px
+    color color-secondary-text
+  &__ol
+    padding-left 15px
+    li
+      list-style-position outside
+      list-style-type decimal
