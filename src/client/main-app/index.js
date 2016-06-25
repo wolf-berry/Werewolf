@@ -19,7 +19,7 @@ router.map({
     component: GameHall,
   },
 
-  '/game-room': {
+  '/game-room/:roomId': {
     name: 'game-room',
     component: GameRoom,
   },

@@ -10,7 +10,7 @@
 import Vue from 'vue';
 import AgoraRTC from 'agora-rtc';
 
-import agora from '../../libs/agora';
+import { generateVideoProfile } from '../../libs/agora_utils';
 
 export default {
   name: 'Test',
@@ -33,7 +33,6 @@ export default {
 
   methods: {
     initAgoraRTC() {
-      console.log('boring', this.key);
       this.client.init(this.key, () => {
         console.log('AgoraRTC client initialized');
         this.client.join(this.key, this.channel, null, (uid) => {
@@ -78,7 +77,7 @@ export default {
         local: true,
       });
 
-      const videoProfile = agora.generateVideoProfile(this.resolution, this.maxFrameRate);
+      const videoProfile = generateVideoProfile(this.resolution, this.maxFrameRate);
       this.localStream.setVideoProfile(videoProfile);
 
       this.localStream.init(() => {
