@@ -1,32 +1,47 @@
 import db from '../db';
+import { camelizeKeys, snakizeKeys } from '../util';
 
-function createActivity({
+function createActivityAndStringifyContent({
   gameId,
   type,
   content,
-  startTime = new Date(),
-  endTime = new Date(),
+  startAt = new Date(),
+  endAt = new Date(),
   },
   trx = null
 ) {
-  return db.insert({
+  content = content && JSON.stringify(content);
+  return db.insert(snakizeKeys({
     gameId,
     type,
     content,
-    startTime,
-    endTime,
-  })
+    startAt,
+    endAt,
+  }))
   .into('activities')
   .transacting(trx);
 }
 
-function updateActivity(activityId, activity, trx = null) {
-  return db.update(activity)
+function updateActivityAndStringifyContent(activityId, activity, trx = null) {
+  activity.content = activity.content && JSON.stringify(activity.content);
+  return db.update(snakizeKeys(activity))
     .where('id', activityId)
     .transacting(trx);
 }
 
+function getActivityAndJSONContent(activityId) {
+  return db.select()
+    .from('activity')
+    .where('id', activityId)
+    .then(camelizeKeys)
+    .then((rows) => rows.map((row) => {
+      row.content = JSON.parse(row.content);
+      return row;
+    }));
+}
+
 export default {
-  createActivity,
-  updateActivity,
+  createActivityAndStringifyContent,
+  updateActivityAndStringifyContent,
+  getActivityAndJSONContent,
 };

@@ -18,6 +18,20 @@ function camelizeKeys(obj) {
 }
 
 /**
+ * Convert all first level property names of obj from
+ * whatEver case to snake_case.
+ *
+ * @param {Object} obj - the original object with camelCase properties
+ * @return {Object} returns a object with snake_case properties
+ */
+function snakizeKeys(obj) {
+  return _.reduce(obj, (result, val, key) => {
+    result[_.snakeCase(key)] = val;
+    return result;
+  }, {});
+}
+
+/**
  * Default error handler for API controllers.
  * If error has no `status` field, it will be treated as internal server error.
  *
@@ -45,4 +59,5 @@ function defaultErrorHandler(err, res, messageOnly = true) {
 export default {
   camelizeKeys,
   defaultErrorHandler,
+  snakizeKeys,
 };
